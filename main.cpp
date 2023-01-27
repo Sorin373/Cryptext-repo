@@ -1,16 +1,32 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
-#include <string.h>
+#include <string>
 
-class node
+std::string text;
+
+void readFile()
 {
- public:
-    char character;
-    node *next;
-};
+    std::ifstream inputTextFile("input.txt");
+    if (!inputTextFile.good())
+    {
+        std::cerr << "Error: file can not be read!" << std::endl;
+        return;
+    }
+    
+    inputTextFile.seekg(0, std::ios::end);
 
-node* head  = nullptr;
+    if (inputTextFile.tellg() == 0)
+    {
+        std::cout << "Error: the file is empty!" << std::endl;
+        return;
+    }
+
+    inputTextFile.seekg(0, std::ios::beg);
+    std::getline(inputTextFile, text);
+
+    inputTextFile.close();
+}
 
 int main(int argc, char *argv[])
 {
@@ -28,6 +44,11 @@ int main(int argc, char *argv[])
         std::cout << " -e : to encrypt the message" << std::endl;
         std::cout << " -d : to decrypt the message" << std::endl;
         return 0;
+    }
+    else
+    {
+        readFile();
+        std::cout << text;
     }
 
     return 0;
