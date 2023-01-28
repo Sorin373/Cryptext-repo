@@ -2,8 +2,13 @@
 #include <fstream>
 #include <cstdlib>
 #include <string>
+#include <Windows.h>
+#include <conio.h>
 
 std::string text;
+const char alphabet[27] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+unsigned int key;
+bool vDecrypt = false;
 
 void readFile()
 {
@@ -13,7 +18,7 @@ void readFile()
         std::cerr << "Error: file can not be read!" << std::endl;
         return;
     }
-    
+
     inputTextFile.seekg(0, std::ios::end);
 
     if (inputTextFile.tellg() == 0)
@@ -26,6 +31,20 @@ void readFile()
     std::getline(inputTextFile, text);
 
     inputTextFile.close();
+}
+
+void encrypt()
+{
+    vDecrypt = true;
+    std::cout << key;
+
+    getch();
+}
+
+void decrypt()
+{
+    if (!vDecrypt)
+        return;
 }
 
 int main(int argc, char *argv[])
@@ -48,7 +67,32 @@ int main(int argc, char *argv[])
     else
     {
         readFile();
-        std::cout << text;
+
+        unsigned int menu;
+
+        do
+        {
+            std::cout << "\033c";
+
+            std::cout << "MENU" << std::endl;
+            std::cout << "1. Encrypt message" << std::endl;
+            std::cout << "2. Decrypt message" << std::endl;
+            std::cout << "0. Exit"
+                      << "\n\n";
+
+            std::cout << "Choice: ";
+            std::cin >> menu;
+
+            switch (menu)
+            {
+            case 1:
+                key = atoi(argv[2]);
+                encrypt();
+                break;
+            case 2:
+                break;
+            }
+        } while (menu != 0);
     }
 
     return 0;
