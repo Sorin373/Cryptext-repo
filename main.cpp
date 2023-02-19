@@ -99,6 +99,7 @@ int main(int argc, char *argv[])
                     encrypt();
                     std::cout << "Encrypted text: ";
                     std::cout << text << std::endl;
+                    outputTextFile << "Key: " << key << std::endl;
                     outputTextFile << "E: " << text << std::endl << std::endl;
                     outputResetFile << text;
                     break;
@@ -106,6 +107,7 @@ int main(int argc, char *argv[])
                     decrypt();
                     std::cout << "Decrypted text: ";
                     std::cout << text << std::endl;
+                    outputTextFile << "Key: " << key << std::endl;
                     outputTextFile << "D: " << text << std::endl << std::endl;
                     outputResetFile << text;
                     break;
