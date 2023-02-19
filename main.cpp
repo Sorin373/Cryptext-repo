@@ -1,14 +1,9 @@
-#include <iostream>
-#include <fstream>
-#include <cstdlib>
-#include <string>
-#include <Windows.h>
-#include <conio.h>
+#include <iostream>     //input/output operations
+#include <fstream>      //file manipulation
+#include <cstring>      //string manipulation
 
-std::string text;
-const char alphabet[27] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+char text[1001], msg_enc[1001] = "", msg_dec[1001] = "";
 unsigned int key;
-bool vDecrypt = false;
 
 void readFile()
 {
@@ -28,23 +23,40 @@ void readFile()
     }
 
     inputTextFile.seekg(0, std::ios::beg);
-    std::getline(inputTextFile, text);
-
+    inputTextFile.get(text, 1001);
     inputTextFile.close();
 }
 
 void encrypt()
 {
-    vDecrypt = true;
-    std::cout << key;
+    for (unsigned int i = 0; i < strlen(text); i++)
+    {
+        char c = text[i];
+        if (isalpha(c))
+        {
+            c = toupper(c);
+            c = ((c - 65 + key) % 26) + 65;
+        }
 
-    getch();
+        msg_enc[i] += c;
+    }
+    strcpy(text, msg_enc);
 }
 
 void decrypt()
 {
-    if (!vDecrypt)
-        return;
+    for (unsigned int i = 0; i < strlen(text); i++)
+    {
+        char c = text[i];
+        if (isalpha(c))
+        {
+            c = toupper(c);
+            c = ((c - 65 - key + 26) % 26) + 65;
+        }
+
+        msg_dec[i] += c;
+    }
+    strcpy(text, msg_dec);
 }
 
 int main(int argc, char *argv[])
@@ -52,7 +64,7 @@ int main(int argc, char *argv[])
     // check if the program is being run with the correct number of command line arguments
     if (argc < 3)
     {
-        std::cout << "Usage: " << argv[0] << " [ -e | -d ] message key" << std::endl;
+        std::cout << "Usage: " << argv[0] << " [ -e | -d ] key" << std::endl;
         std::cout << " -e : to encrypt the message" << std::endl;
         std::cout << " -d : to decrypt the message" << std::endl;
         return -1;
@@ -66,34 +78,45 @@ int main(int argc, char *argv[])
     }
     else
     {
-        readFile();
+        readFile();                 //change the text in the input file
 
-        unsigned int menu;
+        std::ofstream outputTextFile;
+        outputTextFile.open("output.txt", std::fstream::app);
+    
+        key = std::stoi(argv[2]);   //converting the key
 
-        do
+        if (!(key >= 1 && key <= 25))
         {
-            std::cout << "\033c";
-
-            std::cout << "MENU" << std::endl;
-            std::cout << "1. Encrypt message" << std::endl;
-            std::cout << "2. Decrypt message" << std::endl;
-            std::cout << "0. Exit"
-                      << "\n\n";
-
-            std::cout << "Choice: ";
-            std::cin >> menu;
-
-            switch (menu)
+            std::cerr << "Invalid key! Key must be between 1 and 25" << std::endl;
+            return -1;   
+        }
+        else
+        {
+            std::ofstream outputResetFile("input.txt");
+            switch (argv[1][1])
             {
-            case 1:
-                key = atoi(argv[2]);
-                encrypt();
-                break;
-            case 2:
-                break;
+                case 'e':
+                    encrypt();
+                    std::cout << "Encrypted text: ";
+                    std::cout << text << std::endl;
+                    outputTextFile << "E: " << text << std::endl << std::endl;
+                    outputResetFile << text;
+                    break;
+                case 'd':
+                    decrypt();
+                    std::cout << "Decrypted text: ";
+                    std::cout << text << std::endl;
+                    outputTextFile << "D: " << text << std::endl << std::endl;
+                    outputResetFile << text;
+                    break;
+                default:
+                    std::cout << "Invalid character" << std::endl;
+                    break;
             }
-        } while (menu != 0);
+            outputResetFile.close();
+        }
+        
+        outputTextFile.close();
     }
-
     return 0;
 }
