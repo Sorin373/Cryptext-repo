@@ -19,7 +19,7 @@ $ g++ main main.cpp
 $ ./main -e 5
 ```
 
-#Output
+# Output
 - Not only is the encrypted text shown in the console, but it is also stored in the _output.txt_ file, along side the key used for encryption.
 
 # Contact
