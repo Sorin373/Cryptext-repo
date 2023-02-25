@@ -12,7 +12,7 @@
 $ g++ main main.cpp
 ```
 
-- Then run the program using the following cmd (for decryption use -d):
+- Then, run the program using the following cmd (for decryption use -d):
 (the KEY can be changed - it has to be between _1_ and _25_)
 
 ```bash
