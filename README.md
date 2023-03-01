@@ -9,7 +9,7 @@
 - Clone the project locally on your machine and build main.cpp in the terminal:
 
 ```bash
-$ g++ main main.cpp
+$ g++ -o main main.cpp
 ```
 
 - Then, run the program using the following cmd (for decryption use -d):
